@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Jauge</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-gauge@0.4.2/dist/chartjs-gauge.min.js"></script>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    canvas {
+      max-width: 400px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>Niveau de Performance</h2>
+  <canvas id="jaugeChart"></canvas>
+
+  <script>
+    const ctx = document.getElementById('jaugeChart').getContext('2d');
+    const jauge = new Chart(ctx, {
+      type: 'gauge',
+      data: {
+        datasets: [{
+          value: 65,
+          minValue: 0,
+          data: [30, 60, 90, 100],
+          backgroundColor: ['#ff6b6b', '#ffa94d', '#fbd14b', '#51cf66'],
+        }]
+      },
+      options: {
+        responsive: true,
+        needle: {
+          radiusPercentage: 2,
+          widthPercentage: 3.2,
+          lengthPercentage: 80,
+          color: 'rgba(0, 0, 0, 0.8)'
+        },
+        valueLabel: {
+          formatter: (value) => value + '%',
+          display: true,
+          fontSize: 20,
+          color: '#333'
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
