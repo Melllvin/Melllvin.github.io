@@ -32,8 +32,14 @@
 
     <script>
         document.getElementById('triggerButton').addEventListener('click', function() {
-            // Remplacez 'YOUR_ID_DATE_AUDIT' par la valeur dynamique ou statique de l'ID que vous souhaitez passer
-            const idDateAudit = 'YOUR_ID_DATE_AUDIT';
+            // Extraire l'ID de l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const idDateAudit = urlParams.get('idDateAudit');
+
+            if (!idDateAudit) {
+                alert('ID de date d\'audit manquant dans l\'URL.');
+                return;
+            }
 
             fetch('https://datapilote.com/webhook/nouvelAudit', {
                 method: 'POST',
