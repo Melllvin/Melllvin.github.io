@@ -1,118 +1,57 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Radar et Jauge</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      margin: 0;
-      padding: 1em;
-      font-family: sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      height: 100vh;
-      flex-direction: row;
-    }
-    .chart-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    canvas {
-      max-width: 400px;
-      margin: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouton pour n8n Webhook</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <div class="chart-container">
-    <h2>Évaluation des compétences</h2>
-    <canvas id="radarChart"></canvas>
-  </div>
+    <button id="triggerButton">Déclencher l'Audit</button>
 
-  <div class="chart-container">
-    <h2>Niveau de performance</h2>
-    <canvas id="gaugeChart"></canvas>
-  </div>
+    <script>
+        document.getElementById('triggerButton').addEventListener('click', function() {
+            // Remplacez 'YOUR_ID_DATE_AUDIT' par la valeur dynamique ou statique de l'ID que vous souhaitez passer
+            const idDateAudit = 'YOUR_ID_DATE_AUDIT';
 
-  <script>
-    // Diagramme Radar
-    const radarCtx = document.getElementById('radarChart').getContext('2d');
-    const radarChart = new Chart(radarCtx, {
-      type: 'radar',
-      data: {
-        labels: ['Communication', 'Créativité', 'Travail d\'équipe', 'Autonomie', 'Résolution de problèmes', 'Adaptabilité'],
-        datasets: [{
-          label: 'Niveau',
-          data: [8, 7, 9, 6, 7, 8],
-          fill: true,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          pointBackgroundColor: 'rgba(75, 192, 192, 1)',
-          pointBorderColor: '#fff',
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          r: {
-            angleLines: { display: true },
-            suggestedMin: 0,
-            suggestedMax: 10
-          }
-        }
-      }
-    });
-
-    // Jauge circulaire
-    const gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
-    const valeur = 70; // Valeur de la jauge
-
-    const gaugeChart = new Chart(gaugeCtx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [valeur, 100 - valeur],
-          backgroundColor: ['#36a2eb', '#e0e0e0'],
-          borderWidth: 0,
-          cutout: '80%',
-        }]
-      },
-      options: {
-        responsive: true,
-        rotation: -90,
-        circumference: 180,
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false },
-        }
-      }
-    });
-
-    // Ajouter le texte au centre de la jauge
-    const canvas = document.getElementById('gaugeChart');
-    const context = canvas.getContext('2d');
-    canvas.addEventListener('mousemove', () => {}); // Fix Chrome redessin
-
-    gaugeChart.options.animation = {
-      onComplete: function () {
-        const width = canvas.width;
-        const height = canvas.height;
-        context.save();
-        context.font = "bold 22px sans-serif";
-        context.fillStyle = "#333";
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.fillText(valeur + "%", width / 2, height / 1.2);
-        context.restore();
-      }
-    };
-
-    gaugeChart.update();
-  </script>
+            fetch('https://datapilote.com/webhook/nouvelAudit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ idDateAudit: idDateAudit }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Audit déclenché avec succès !');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Erreur lors du déclenchement de l\'audit.');
+            });
+        });
+    </script>
 </body>
 </html>
